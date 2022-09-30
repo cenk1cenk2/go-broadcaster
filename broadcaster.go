@@ -21,14 +21,14 @@ func NewBroadcaster[Data any](buflen int) *Broadcaster[Data] {
 	return b
 }
 
-func (b *Broadcaster[Data]) Register(newch chan<- Data) chan<- Data {
-	b.reg <- newch
+func (b *Broadcaster[Data]) Register(ch chan<- Data) chan<- Data {
+	b.reg <- ch
 
-	return newch
+	return ch
 }
 
-func (b *Broadcaster[Data]) Unregister(newch chan<- Data) {
-	b.unreg <- newch
+func (b *Broadcaster[Data]) Unregister(ch chan<- Data) {
+	b.unreg <- ch
 }
 
 func (b *Broadcaster[Data]) Close() error {
