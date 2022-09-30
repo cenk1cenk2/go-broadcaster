@@ -1,29 +1,15 @@
-/*
-Package broadcast provides pubsub of messages over channels.
-A provider has a Broadcaster into which it Submits messages and into
-which subscribers Register to pick up those messages.
-*/
 package broadcaster
 
-// The Broadcaster interface describes the main entry points to
-// broadcasters.
-type Broadcaster[Data any] interface {
-	// Register a new channel to receive broadcasts
-	Register(chan<- Data)
-	// Unregister a channel so that it no longer receives broadcasts.
-	Unregister(chan<- Data)
-	// Shut this broadcaster down.
-	Close() error
-	// Submit a new object to all subscribers
-	Submit(Data)
-	// Try Submit a new object to all subscribers return false if input chan is fill
-	TrySubmit(Data) bool
+type Broadcaster[Data any] struct {
+	input chan Data
+	reg   chan chan<- Data
+	unreg chan chan<- Data
+
+	outputs map[chan<- Data]bool
 }
 
-// NewBroadcaster creates a new broadcaster with the given input
-// channel buffer length.
-func NewBroadcaster[Data any](buflen int) Broadcaster[Data] {
-	b := &broadcaster[Data]{
+func NewBroadcaster[Data any](buflen int) *Broadcaster[Data] {
+	b := &Broadcaster[Data]{
 		input:   make(chan Data, buflen),
 		reg:     make(chan chan<- Data),
 		unreg:   make(chan chan<- Data),
@@ -33,4 +19,59 @@ func NewBroadcaster[Data any](buflen int) Broadcaster[Data] {
 	go b.run()
 
 	return b
+}
+
+func (b *Broadcaster[Data]) Register(newch chan<- Data) chan<- Data {
+	b.reg <- newch
+
+	return newch
+}
+
+func (b *Broadcaster[Data]) Unregister(newch chan<- Data) {
+	b.unreg <- newch
+}
+
+func (b *Broadcaster[Data]) Close() error {
+	close(b.reg)
+	close(b.unreg)
+	return nil
+}
+
+// Submit an item to be broadcast to all listeners.
+func (b *Broadcaster[Data]) Submit(m Data) {
+	b.input <- m
+}
+
+// TrySubmit attempts to submit an item to be broadcast, returning
+// true iff it the item was broadcast, else false.
+func (b *Broadcaster[Data]) TrySubmit(m Data) bool {
+	select {
+	case b.input <- m:
+		return true
+	default:
+		return false
+	}
+}
+
+func (b *Broadcaster[Data]) broadcast(m Data) {
+	for ch := range b.outputs {
+		ch <- m
+	}
+}
+
+func (b *Broadcaster[Data]) run() {
+	for {
+		select {
+		case m := <-b.input:
+			b.broadcast(m)
+		case ch, ok := <-b.reg:
+			if !ok {
+				return
+			}
+
+			b.outputs[ch] = true
+		case ch := <-b.unreg:
+			delete(b.outputs, ch)
+		}
+	}
 }
