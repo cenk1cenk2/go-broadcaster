@@ -31,8 +31,10 @@ func (b *broadcaster[Data]) run() {
 	}
 }
 
-func (b *broadcaster[Data]) Register(newch chan<- Data) {
+func (b *broadcaster[Data]) Register(newch chan<- Data) chan<- Data {
 	b.reg <- newch
+
+	return newch
 }
 
 func (b *broadcaster[Data]) Unregister(newch chan<- Data) {
