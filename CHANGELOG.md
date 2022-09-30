@@ -1,3 +1,10 @@
+## [1.1.1](https://gitlab.kilic.dev/libraries/go-broadcaster/compare/v1.1.0...v1.1.1) (2022-09-30)
+
+
+### Bug Fixes
+
+* update naming ([641fd34](https://gitlab.kilic.dev/libraries/go-broadcaster/commit/641fd34eac487d376f76294c3e06c8a006b74359))
+
 # [1.1.0](https://gitlab.kilic.dev/libraries/go-broadcaster/compare/v1.0.0...v1.1.0) (2022-09-30)
 
 
