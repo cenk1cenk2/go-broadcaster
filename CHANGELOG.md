@@ -1,3 +1,10 @@
+## [1.1.2](https://gitlab.kilic.dev/libraries/go-broadcaster/compare/v1.1.1...v1.1.2) (2023-12-12)
+
+
+### Bug Fixes
+
+* lint ([54843e6](https://gitlab.kilic.dev/libraries/go-broadcaster/commit/54843e66ba4359e9f03cb490ca6c8b8b87907ea6))
+
 ## [1.1.1](https://gitlab.kilic.dev/libraries/go-broadcaster/compare/v1.1.0...v1.1.1) (2022-09-30)
 
 
