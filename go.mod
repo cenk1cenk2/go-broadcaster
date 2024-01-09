@@ -1,3 +1,3 @@
 module gitlab.kilic.dev/libraries/go-broadcaster
 
-go 1.21.5
+go 1.21.6
