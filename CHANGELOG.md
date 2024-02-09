@@ -1,3 +1,10 @@
+## [1.1.3](https://gitlab.kilic.dev/libraries/go-broadcaster/compare/v1.1.2...v1.1.3) (2024-02-09)
+
+
+### Bug Fixes
+
+* update go version ([8c37a80](https://gitlab.kilic.dev/libraries/go-broadcaster/commit/8c37a803dddc4d9eda2137715e8101819f1918ae))
+
 ## [1.1.2](https://gitlab.kilic.dev/libraries/go-broadcaster/compare/v1.1.1...v1.1.2) (2023-12-12)
 
 
